@@ -1,0 +1,116 @@
+[
+    {
+        "sous_categorie": [
+            {
+                "sous_categorie": [
+                    {
+                        "description": "<p>Les must have de votre garde-robe : découvrez les divers modèles ainsi que les différentes</p>\n<p>coupes et couleurs de notre collection !</p>", 
+                        "products": [
+                            {
+                                "description": "<p>T-shirt délavé à manches courtes et col rond. Matière douce et extensible pour un confort inégalé. Pour un look estival, portez-le avec un chapeau de paille !</p>", 
+                                "quantity": 0, 
+                                "id": 1, 
+                                "reference": "demo_1", 
+                                "name": "T-shirt délavé à manches courtes"
+                            }
+                        ], 
+                        "id": 5, 
+                        "name": "T-shirts"
+                    }, 
+                    {
+                        "description": "Choisissez le top qui vous va le mieux, parmi une large sélection.", 
+                        "products": [], 
+                        "id": 6, 
+                        "name": "Tops"
+                    }, 
+                    {
+                        "description": "Coordonnez vos accessoires à vos chemisiers préférés, pour un look parfait.", 
+                        "products": [
+                            {
+                                "description": "<p>Chemisier à manches courtes drapées, pour un style féminin et élégant.</p>", 
+                                "quantity": 0, 
+                                "id": 2, 
+                                "reference": "demo_2", 
+                                "name": "Chemisier"
+                            }
+                        ], 
+                        "id": 7, 
+                        "name": "Chemisiers"
+                    }
+                ], 
+                "description": "<p>Choisissez parmi une large sélection de T-shirts à manches courtes, longues ou 3/4, de tops, de débardeurs, de chemisiers et bien plus encore.</p>\n<p>Trouvez la coupe qui vous va le mieux !</p>", 
+                "products": [], 
+                "id": 4, 
+                "name": "Tops"
+            }, 
+            {
+                "sous_categorie": [
+                    {
+                        "description": "<p>Vous cherchez une robe pour la vie de tous les jours ? Découvrez</p>\n<p>notre sélection de robes et trouvez celle qui vous convient.</p>", 
+                        "products": [
+                            {
+                                "description": "<p>Robe imprimée 100 % coton. Haut rayé noir et blanc et bas composé d'une jupe patineuse taille haute.</p>", 
+                                "quantity": 0, 
+                                "id": 3, 
+                                "reference": "demo_3", 
+                                "name": "Robe imprimée"
+                            }
+                        ], 
+                        "id": 9, 
+                        "name": "Robes décontractées"
+                    }, 
+                    {
+                        "description": "Trouvez la robe parfaite pour une soirée inoubliable !", 
+                        "products": [
+                            {
+                                "description": "<p>Robe de soirée imprimée à manches droites et volants, avec fine ceinture noire à la taille.</p>", 
+                                "quantity": 0, 
+                                "id": 4, 
+                                "reference": "demo_4", 
+                                "name": "Robe imprimée"
+                            }
+                        ], 
+                        "id": 10, 
+                        "name": "Robes de soirée"
+                    }, 
+                    {
+                        "description": "Courte, longue, en soie ou imprimée, trouvez votre robe d'été idéale !", 
+                        "products": [
+                            {
+                                "description": "<p>Longue robe imprimée à fines bretelles réglables. Décolleté en V et armature sous la poitrine. Volants au bas de la robe.</p>", 
+                                "quantity": 0, 
+                                "id": 5, 
+                                "reference": "demo_5", 
+                                "name": "Robe d'été imprimée"
+                            }, 
+                            {
+                                "description": "<p>Robe en mousseline sans manches, longueur genoux. Décolleté en V avec élastique sous la poitrine.</p>", 
+                                "quantity": 0, 
+                                "id": 6, 
+                                "reference": "demo_6", 
+                                "name": "Robe d'été imprimée"
+                            }, 
+                            {
+                                "description": "<p>Robe en mousseline imprimée à bretelles, longueur genoux. Profond décolleté en V.</p>", 
+                                "quantity": 0, 
+                                "id": 7, 
+                                "reference": "demo_7", 
+                                "name": "Robe en mousseline imprimée"
+                            }
+                        ], 
+                        "id": 11, 
+                        "name": "Robes d'été"
+                    }
+                ], 
+                "description": "<p>Trouvez votre nouvelle pièce préférée parmi une large sélection de robes décontractées, d'été et de soirée !</p>\n<p>Nous avons des robes pour tous les styles et toutes les occasions.</p>", 
+                "products": [], 
+                "id": 8, 
+                "name": "Robes"
+            }
+        ], 
+        "description": "<p><strong>Vous trouverez ici toutes les collections mode pour femmes.</strong></p>\n<p>Cette catégorie regroupe tous les basiques de votre garde-robe et bien plus encore :</p>\n<p>chaussures, accessoires, T-shirts imprimés, robes élégantes et jeans pour femmes !</p>", 
+        "products": [], 
+        "id": 3, 
+        "name": "Femmes"
+    }
+]

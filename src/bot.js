@@ -1,7 +1,7 @@
-import { replyMessage, replyButton ,sendMessage} from './facebook.js'
+import { replyMessage, replyButton ,sendMessage , sendPerMenu} from './facebook.js'
 import config from './../config.js'
 import { Client } from 'recastai'
-
+var cat = require('./result.json') 
 const client = new Client(config.recastToken, config.language)
 
 function handleMessage(event) {
@@ -10,9 +10,40 @@ function handleMessage(event) {
   const messageAttachments = event.message.attachments
   if (messageText) {
     client.textConverse(messageText, { conversationToken: senderID }).then((res) => {
+      console.log(cat)
       const reply = res.reply()               /* To get the first reply of your bot. */
       const replies = res.replies             /* An array of all your replies */
-      const action = res.action               /* Get the object action. You can use 'action.done' to trigger a specification action when it's at true. */
+      const action = res.action 
+                    /* Get the object action. You can use 'action.done' to trigger a specification action when it's at true. */
+      var categories = []
+      var category1 = {id : "1",
+                    title:"Mode Homme",
+                    image_url:"http://localhost/presta/img/c/3-category_default.jpg",
+                    nb_produits:"1060" }
+      var category2 = {id : "2",
+                    title:"Mode Femme",
+                    image_url:"http://localhost/presta/img/c/4-category_default.jpg",
+                    nb_produits:"860" }
+      categories.push(category1)
+      categories.push(category2)
+      var elements = []
+      categories.forEach( (cat) => {
+          var element =  {
+                   title: cat.title ,
+                   image_url:cat.image_url,
+                   subtitle: cat.nb_produits + " produit",
+                     buttons:[
+                        {
+                          type : "postback",
+                          title :"les sous-catégories",
+                          payload : "ss_cat_"+cat.id
+                        },{
+                          type:"postback",
+                          title : "Produit populaires",
+                          payload:"prods_"+cat.id
+                        }]}
+           elements.push(element)             
+      })
 
       if (!reply) {
         
@@ -26,52 +57,42 @@ function handleMessage(event) {
           attachment: {
             type:"template",
             payload: 
-{              template_type:"generic",
-              elements:[
-                {
-                   title: "Hello" ,
-                   image_url:"http://fo.demo.prestashop.com/10-large_default/printed-dress.jpg",
-                   subtitle:"subtitle",
-                   default_action:{
-                      type:"web_url",
-                      url:"https://www.vongo.tn",
-                      webview_height_ratio:"tall",
-                     },
-                    buttons:[
-                        {
-                          type : "web_url",
-                          url : "https://fr.slideshare.net/mathieu_lacage/ns3-tutorial",
-                          title :"ns3-tutorial"
-                        },{
-                          type:"postback",
-                          title : "start chatting",
-                          payload:"COOL"
-
-                        }
-
-
-                      ] 
- 
-                  },
-                 {
-                   title: "Hello" ,
-                    image_url:"http://fo.demo.prestashop.com/10-large_default/printed-dress.jpg",
-                  
-                 },
-                 {
-                   title: "How low " ,
-                    image_url:"http://fo.demo.prestashop.com/10-large_default/printed-dress.jpg",
-                  
-                 }
-                   
-                    //} 
-                   ]
+            { template_type:"generic",
+              elements: elements
             },
           },
         },
+
        }
-       
+       var persMenu = {
+      get_started:{
+      "payload":"GET_STARTED_PAYLOAD"
+        },
+        persistent_menu:[{
+      "locale":"default",
+      "composer_input_disabled":true,
+      "call_to_actions":[
+        {
+          "title":"Nos categories",
+          "type":"postback",
+          "payload":"CATEGORIES"
+          
+        },
+        {
+          "type":"web_url",
+          "title":"Contactez nous",
+          "url":"http://petershats.parseapp.com/hat-news",
+          "webview_height_ratio":"full"
+        }
+      ]
+    },
+    {
+      "locale":"zh_CN",
+      "composer_input_disabled":false
+    }
+  ]}
        sendMessage(messageData)
+       sendPerMenu(persMenu)
        console.log("message sent")  
       }
         else{

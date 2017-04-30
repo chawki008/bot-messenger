@@ -24,6 +24,24 @@ function sendMessage(messageData) {
     })
   })
 }
+function sendPerMenu(messageData) {
+  return new Promise((resolve, reject) => {
+    request({
+      uri: 'https://graph.facebook.com/v2.6/me/messenger_profile',
+      qs: { access_token: config.pageAccessToken },
+      method: 'POST',
+      json: messageData,
+    }, (error, response , body) => {
+      if (!error && response.statusCode === 200) {
+        console.log('Persistent menu is set')
+        resolve()
+      } else {
+        console.log(body)
+        reject(error)
+      }
+    })
+  })
+}
 
 /*``
 * type of message to send back
@@ -78,4 +96,5 @@ module.exports = {
   replyMessage,
   replyButton,
   sendMessage,
+  sendPerMenu,
 }

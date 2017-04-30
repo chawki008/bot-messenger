@@ -43,8 +43,14 @@ app.post('/', (req, res) => {
         if (messagingEvent.message) {
           if (!messagingEvent.message.is_echo) {
             handleMessage(messagingEvent)
+          }}
+          else{
+            if(typeof messagingEvent.postback != "undefined" )
+            {var postBackPay = messagingEvent.postback.payload 
+            console.log(messagingEvent.postback.payload)
+           } 
           }
-        }
+        
       })
     })
     res.sendStatus(200)
@@ -54,3 +60,5 @@ app.post('/', (req, res) => {
 app.listen(app.get('port'), () => {
   console.log('Our bot is running on port', app.get('port'))
 })
+
+           
