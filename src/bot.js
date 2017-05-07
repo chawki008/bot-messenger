@@ -1,55 +1,133 @@
-import { replyMessage, replyButton ,sendMessage , sendPerMenu} from './facebook.js'
+import { replyMessage, replyButton ,sendMessage , sendPerMenu , getSousCategories,getFormatedCategorys ,DFS_searchCategorie , DBS_getProducts} from './facebook.js'
 import config from './../config.js'
 import { Client } from 'recastai'
-var cat = require('./result.json') 
+var deepcopy = require("deepcopy");
+const domaine = "http://51c356eb.ngrok.io/"
 const client = new Client(config.recastToken, config.language)
+var http = require("request-promise") ;
+var urlHost =domaine+"/presta/prestaToJson.php";
 
-function handleMessage(event) {
-  const senderID = event.sender.id
-  const messageText = event.message.text
-  const messageAttachments = event.message.attachments
-  if (messageText) {
-    client.textConverse(messageText, { conversationToken: senderID }).then((res) => {
-      console.log(cat)
-      const reply = res.reply()               /* To get the first reply of your bot. */
-      const replies = res.replies             /* An array of all your replies */
-      const action = res.action 
-                    /* Get the object action. You can use 'action.done' to trigger a specification action when it's at true. */
-      var categories = []
-      var category1 = {id : "1",
-                    title:"Mode Homme",
-                    image_url:"http://localhost/presta/img/c/3-category_default.jpg",
-                    nb_produits:"1060" }
-      var category2 = {id : "2",
-                    title:"Mode Femme",
-                    image_url:"http://localhost/presta/img/c/4-category_default.jpg",
-                    nb_produits:"860" }
-      categories.push(category1)
-      categories.push(category2)
-      var elements = []
-      categories.forEach( (cat) => {
+var cat_org =[];
+var options = {
+    method: 'POST',
+    uri: urlHost,
+    headers: {
+     'Content-Type': 'application/json; charset=utf-8'
+     },
+    body: {
+        some: 'payload'
+    },
+    json: true // Automatically parses the JSON string in the response
+};
+http(options).then(confirmCallBack).catch(errorCallBack);
+
+function errorCallBack(response){/*do something*/};
+function confirmCallBack(response){
+    cat_org =response;
+};
+
+
+function handlePostback(event){
+    const senderID = event.sender.id
+    if(typeof event.postback.payload != "undefined"){
+      var payload = event.postback.payload;
+      var type = payload.substring(0,6);
+      var cat = deepcopy(cat_org);
+      if (type == "ss_cat"){
+          var id = payload.substring(7,8);
+          var sous_categories = getFormatedCategorys(getSousCategories(cat,id));
+          const messageData = prepareCatMessage(sous_categories,senderID);
+          sendMessage(messageData);
+       }
+       if (type == "ss_pro"){
+          var id = payload.substring(7,8);
+          console.log(id);
+          var category = DFS_searchCategorie(cat[0],id);
+          console.log(category);
+          var products = DBS_getProducts(category);
+          console.log(products);
+          const messageData = prepareProdMessage(products,senderID);
+          sendMessage(messageData);
+            
+         }
+       if (payload == "CATEGORIES")
+       {
+          var categories = getFormatedCategorys(cat) 
+          const messageData = prepareCatMessage(categories,senderID);
+          sendMessage(messageData);
+       }  
+        
+    
+
+    }
+}
+
+function prepareProdMessage(products,senderID){
+
+  var elements = []
+      products.forEach( (product) => {
           var element =  {
-                   title: cat.title ,
-                   image_url:cat.image_url,
-                   subtitle: cat.nb_produits + " produit",
+                   title: product.name ,
+                   image_url:product.url_image,
+                   subtitle:"reference :"+product.reference,
+                     buttons:[
+                        {
+                          type:"web_url",
+                          title : "Acheter",
+                          url:domaine +"presta/index.php?id_product="+product.id+"&controller=product"
+                        },
+                        {
+                          type : "postback",
+                          title :"Produit similaires",
+                          payload : "pr_sim_"+product.id
+                        }]
+                      }
+           elements.push(element);             
+        
+      });
+
+      var messageData = {
+        recipient: {
+          id: senderID,
+        },
+        message: {
+          attachment: {
+            type:"template",
+            payload: 
+            { template_type:"generic",
+              elements: elements
+            },
+          },
+        }
+
+       }
+      return messageData;
+}
+function prepareCatMessage(categories,senderID){
+   var elements = []
+      categories.forEach( (category) => {
+          var element =  {
+                   title: category.title ,
+                   image_url:category.image_url,
+                   subtitle: category.nb_produits + " produit",
                      buttons:[
                         {
                           type : "postback",
                           title :"les sous-catégories",
-                          payload : "ss_cat_"+cat.id
+                          payload : "ss_cat_"+category.id
                         },{
                           type:"postback",
                           title : "Produit populaires",
-                          payload:"prods_"+cat.id
+                          payload:"ss_pro_"+category.id
                         }]}
+           if (typeof getSousCategories(cat_org,category.id) =="undefined") {
+                  element.buttons[0].title = "Les Produits"
+                  element.buttons[0].payload ="ss_pro_"+category.id
+                  }             
            elements.push(element)             
       })
 
-      if (!reply) {
-        
-        var options = {}
-        if(messageText == "webview"){
-          const messageData = {
+      var messageData = {
         recipient: {
           id: senderID,
         },
@@ -64,36 +142,56 @@ function handleMessage(event) {
         },
 
        }
+      return messageData;
+}
+
+function handleMessage(event) {
+  const senderID = event.sender.id
+  const messageText = event.message.text
+  const messageAttachments = event.message.attachments
+  if (messageText) {
+    client.textConverse(messageText, { conversationToken: senderID }).then((res) => {
+      const reply = res.reply()               /* To get the first reply of your bot. */
+      const replies = res.replies             /* An array of all your replies */
+      const action = res.action 
+      var cat = deepcopy(cat_org);
+      var categories = getFormatedCategorys(cat) 
+
+      if (!reply) {
+        var options = {}
+        if(messageText == "webview"){
+          const messageData = prepareCatMessage(categories,senderID);
+
        var persMenu = {
-      get_started:{
-      "payload":"GET_STARTED_PAYLOAD"
-        },
-        persistent_menu:[{
-      "locale":"default",
-      "composer_input_disabled":true,
-      "call_to_actions":[
-        {
-          "title":"Nos categories",
-          "type":"postback",
-          "payload":"CATEGORIES"
-          
-        },
-        {
-          "type":"web_url",
-          "title":"Contactez nous",
-          "url":"http://petershats.parseapp.com/hat-news",
-          "webview_height_ratio":"full"
+            get_started:{"payload":"GET_STARTED_PAYLOAD"},
+            persistent_menu:[
+            {
+            "locale":"default",
+            "composer_input_disabled":true,
+            "call_to_actions":[
+              {
+                "title":"Nos categories",
+                "type":"postback",
+                "payload":"CATEGORIES"
+                
+              },
+              {
+                "type":"web_url",
+                "title":"Contactez nous",
+                "url":"http://petershats.parseapp.com/hat-news",
+                "webview_height_ratio":"full"
+              }
+            ]
+          },
+          {
+            "locale":"zh_CN",
+            "composer_input_disabled":false
+          }
+        ]
         }
-      ]
-    },
-    {
-      "locale":"zh_CN",
-      "composer_input_disabled":false
-    }
-  ]}
        sendMessage(messageData)
        sendPerMenu(persMenu)
-       console.log("message sent")  
+       console.log("message sent");  
       }
         else{
         options = {
@@ -105,7 +203,9 @@ function handleMessage(event) {
         }
         replyButton(senderID, options)        /* to reply a button */
         }
-      } else {
+      
+    }
+       else {
         if (action && action.done === true) {
           console.log('action is done')
           // Use external services: use res.memory('notion') if you got a notion from this action
@@ -129,4 +229,5 @@ function handleMessage(event) {
 }
 module.exports = {
   handleMessage,
+  handlePostback,
 }

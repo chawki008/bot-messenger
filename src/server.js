@@ -2,6 +2,11 @@ import express from 'express'
 import config from './../config.js'
 import bodyParser from 'body-parser'
 import { handleMessage } from './bot.js'
+import { handlePostback } from './bot.js'
+
+// main program
+
+
 
 const facebookConfig = {
   pageAccessToken: config.pageAccessToken,
@@ -44,10 +49,11 @@ app.post('/', (req, res) => {
           if (!messagingEvent.message.is_echo) {
             handleMessage(messagingEvent)
           }}
-          else{
+        else{
             if(typeof messagingEvent.postback != "undefined" )
             {var postBackPay = messagingEvent.postback.payload 
-            console.log(messagingEvent.postback.payload)
+              handlePostback(messagingEvent)
+            
            } 
           }
         
