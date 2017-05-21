@@ -69,12 +69,17 @@ function prepareProdMessage(products,senderID){
           var element =  {
                    title: product.name ,
                    image_url:product.url_image,
-                   subtitle:"reference :"+product.reference,
+                   subtitle:"reference :"+product.reference+"\nPrix : " + product.price.substring(0,4)+" DN",
+                   default_action: {
+                          type: "web_url",
+                          url: domaine +"presta/index.php?id_product="+product.id+"&controller=product",
+                          webview_height_ratio: "compact",
+                                } ,
                      buttons:[
                         {
                           type:"web_url",
                           title : "Acheter",
-                          url:domaine +"presta/index.php?id_product="+product.id+"&controller=product"
+                          url: domaine +"presta/index.php?id_product="+product.id+"&controller=product"
                         },
                         {
                           type : "postback",
@@ -95,7 +100,8 @@ function prepareProdMessage(products,senderID){
             type:"template",
             payload: 
             { template_type:"generic",
-              elements: elements
+              elements: elements,
+              image_aspect_ratio: "square"
             },
           },
         }
@@ -110,14 +116,19 @@ function prepareCatMessage(categories,senderID){
                    title: category.title ,
                    image_url:category.image_url,
                    subtitle: category.nb_produits + " produit",
+                    default_action: {
+                          type: "web_url",
+                          url: domaine+"presta/index.php?id_category="+category.id+"&controller=category",
+                          webview_height_ratio:"tall"
+                                } ,
                      buttons:[
                         {
                           type : "postback",
-                          title :"les sous-catégories",
+                          title :"Les Sous-Catégories",
                           payload : "ss_cat_"+category.id
                         },{
                           type:"postback",
-                          title : "Produit populaires",
+                          title : "Voir Les Produits ",
                           payload:"ss_pro_"+category.id
                         }]}
            if (typeof getSousCategories(cat_org,category.id) =="undefined") {
