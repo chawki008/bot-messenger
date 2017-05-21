@@ -2,8 +2,7 @@ import { replyMessage, replyButton ,sendMessage , sendPerMenu , getSousCategorie
 import config from './../config.js'
 import { Client } from 'recastai'
 var deepcopy = require("deepcopy");
-const domaine = "http://51c356eb.ngrok.io/"
-const client = new Client(config.recastToken, config.language)
+const domaine = "http://51d123df.ngrok.io/";
 var http = require("request-promise") ;
 var urlHost =domaine+"/presta/prestaToJson.php";
 
@@ -66,6 +65,7 @@ function prepareProdMessage(products,senderID){
 
   var elements = []
       products.forEach( (product) => {
+          console.log(product.url_image);
           var element =  {
                    title: product.name ,
                    image_url:product.url_image,
@@ -112,6 +112,7 @@ function prepareProdMessage(products,senderID){
 function prepareCatMessage(categories,senderID){
    var elements = []
       categories.forEach( (category) => {
+          console.log(product.url_image);
           var element =  {
                    title: category.title ,
                    image_url:category.image_url,

@@ -1,7 +1,7 @@
 import config from './../config.js'
 import request from 'request'
 
-var domaine = "http://51c356eb.ngrok.io/"
+var domaine = "http://51d123df.ngrok.io/"
 /*
 * call to facebbok to send the message
 */
