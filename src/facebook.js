@@ -6,22 +6,36 @@ var domaine = "http://51d123df.ngrok.io/"
 * call to facebbok to send the message
 */
 
+
+var search_product = function search_product(product_name,root){
+  var products = DBS_getProducts( root[0] );
+  var product_s = []
+  products.forEach((product) => {
+                
+            if (product.name.toUpperCase().indexOf(product_name.toUpperCase()) !== -1){
+                product_s.push(product);  
+                  }
+              })
+  return product_s;
+}
+
 function sendMessage(messageData) {
   return new Promise((resolve, reject) => {
     request({
-      uri: 'https://graph.facebook.com/v2.6/me/messages',
-      qs: { access_token: config.pageAccessToken },
-      method: 'POST',
-      json: messageData,
-    }, (error, response , body) => {
-      if (!error && response.statusCode === 200) {
-        console.log('All good job is done')
-        resolve()
-      } else {
-        console.log(body)
-        reject(error)
-      }
-    })
+          uri: 'https://graph.facebook.com/v2.6/me/messages',
+          qs: { access_token: config.pageAccessToken },
+          method: 'POST',
+          json: messageData,
+          }, 
+          (error, response , body) => {
+            if (!error && response.statusCode === 200) {
+              console.log('All good job is done')
+              resolve()
+            } else {
+              console.log(body)
+              reject(error)
+            }
+            })
   })
 }
 function sendPerMenu(messageData) {
@@ -187,4 +201,5 @@ module.exports = {
   getFormatedCategorys,
   DFS_searchCategorie,
   DBS_getProducts,
+  search_product,
 }

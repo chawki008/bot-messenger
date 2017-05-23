@@ -1,6 +1,5 @@
-import { replyMessage, replyButton ,sendMessage , sendPerMenu , getSousCategories,getFormatedCategorys ,DFS_searchCategorie , DBS_getProducts} from './facebook.js'
+import { search_product,replyMessage, replyButton ,sendMessage , sendPerMenu , getSousCategories,getFormatedCategorys ,DFS_searchCategorie , DBS_getProducts} from './facebook.js'
 import config from './../config.js'
-import { Client } from 'recastai'
 var deepcopy = require("deepcopy");
 const domaine = "http://51d123df.ngrok.io/";
 var http = require("request-promise") ;
@@ -19,7 +18,6 @@ var options = {
     json: true // Automatically parses the JSON string in the response
 };
 http(options).then(confirmCallBack).catch(errorCallBack);
-
 function errorCallBack(response){/*do something*/};
 function confirmCallBack(response){
     cat_org =response;
@@ -112,8 +110,7 @@ function prepareProdMessage(products,senderID){
 function prepareCatMessage(categories,senderID){
    var elements = []
       categories.forEach( (category) => {
-          console.log(product.url_image);
-          var element =  {
+                  var element =  {
                    title: category.title ,
                    image_url:category.image_url,
                    subtitle: category.nb_produits + " produit",
@@ -162,14 +159,9 @@ function handleMessage(event) {
   const messageText = event.message.text
   const messageAttachments = event.message.attachments
   if (messageText) {
-    client.textConverse(messageText, { conversationToken: senderID }).then((res) => {
-      const reply = res.reply()               /* To get the first reply of your bot. */
-      const replies = res.replies             /* An array of all your replies */
-      const action = res.action 
+               /* An array of all your replies */
       var cat = deepcopy(cat_org);
       var categories = getFormatedCategorys(cat) 
-
-      if (!reply) {
         var options = {}
         if(messageText == "webview"){
           const messageData = prepareCatMessage(categories,senderID);
@@ -206,14 +198,10 @@ function handleMessage(event) {
        console.log("message sent");  
       }
         else{
-        options = {
-          messageText: null,
-          buttonTitle: 'My first button',    /* Option of your button. */
-          buttonUrl: 'https://recast.ai/',   /* If you like more option check out ./facebook.js the function replyButton, and look up */
-          buttonType: 'web_url',             /* the facebook doc for button https://developers.facebook.com/docs/messenger-platform/send-api-reference#message */
-          elementsTitle: 'Hey dick head ! ',
-        }
-        replyButton(senderID, options)        /* to reply a button */
+          var products = search_product(messageText,cat_org);
+          const messageData = prepareProdMessage(products,senderID);
+          sendMessage(messageData);
+        
         }
       
     }
@@ -232,12 +220,7 @@ function handleMessage(event) {
           console.log(err)
         })
       }
-    }).catch(err => {
-      console.log(err)
-    })
-  } else if (messageAttachments) {
-    replyMessage(senderID, 'Message with attachment received')
-  }
+   
 }
 module.exports = {
   handleMessage,
