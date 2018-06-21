@@ -1,5 +1,8 @@
 import { search_product,replyMessage, replyButton ,sendMessage , sendPerMenu , getSousCategories,getFormatedCategorys ,DFS_searchCategorie , DBS_getProducts} from './facebook.js'
 import config from './../config.js'
+
+
+
 var deepcopy = require("deepcopy");
 const domaine = "http://51d123df.ngrok.io/";
 var http = require("request-promise") ;
