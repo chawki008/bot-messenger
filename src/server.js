@@ -6,6 +6,14 @@ import { handlePostback } from './bot.js'
 
 // main program
 
+var https = require('https');
+var fs = require('fs');
+
+var options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
 
 
 const facebookConfig = {
@@ -41,6 +49,9 @@ app.get('/', (req, res) => {
 */
 
 app.post('/', (req, res) => {
+  console.log(req.body);
+  console.log(req.body.entry[0].changes);
+ 
   const data = req.body
   if (data.object === 'page') {
     data.entry.forEach(pageEntry => {
@@ -67,4 +78,5 @@ app.listen(app.get('port'), () => {
   console.log('Our bot is running on port', app.get('port'))
 })
 
+var a = https.createServer(options, app).listen(8000);
            

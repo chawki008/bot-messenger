@@ -161,7 +161,9 @@ function handleMessage(event) {
   const senderID = event.sender.id
   const messageText = event.message.text
   const messageAttachments = event.message.attachments
-  if (messageText) {
+console.log(messageText);
+console.log(messageAttachments);
+if (messageText) {
                /* An array of all your replies */
       var cat = deepcopy(cat_org);
       var categories = getFormatedCategorys(cat) 
