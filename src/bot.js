@@ -123,7 +123,7 @@ function prepareCatMessage(categories, senderID) {
             template_type: "generic",
             elements: [{
               title: "category.title",
-              image_url: "category.image_url",
+              image_url: "https://images.unsplash.com/photo-1514908162061-89747fab8b1e?ixlib=rb-0.3.5&s=7e9ed4246dedc22bca54239395ebcfd4&auto=format&fit=crop&w=1500&q=80",
               subtitle: "category.nb_produits" + " produit",
               default_action: {
                 type: "web_url",
