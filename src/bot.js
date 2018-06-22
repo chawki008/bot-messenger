@@ -160,8 +160,7 @@ function handleMessage(event) {
     // var cat = deepcopy(cat_org);
     var categories = {}
     var options = {}
-    if (messageText == "webview") {
-      const messageData = prepareCatMessage(categories, senderID);
+     const messageData = prepareCatMessage(categories, senderID);
 
       var persMenu = {
         get_started: { "payload": "GET_STARTED_PAYLOAD" },
@@ -193,13 +192,7 @@ function handleMessage(event) {
       sendMessage(messageData)
       sendPerMenu(persMenu)
       console.log("message sent");
-    }
-    else {
-      var products = search_product(messageText, cat_org);
-      const messageData = prepareProdMessage(products, senderID);
-      sendMessage(messageData);
-
-    }
+    
 
   }
   else {
